@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Anjos vs Demônios</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="game">
+    <div id="story">
+      <p id="text">Você acorda em um campo de batalha celestial...</p>
+      <div id="choices">
+        <button onclick="choose('anjos')">Seguir os Anjos</button>
+        <button onclick="choose('demonios')">Seguir os Demônios</button>
+      </div>
+    </div>
+
+    <canvas id="battleCanvas" width="400" height="200" style="display:none;"></canvas>
+    <div id="battleText" style="display:none;">Desvie dos ataques!</div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

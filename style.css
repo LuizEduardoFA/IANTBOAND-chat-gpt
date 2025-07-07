@@ -1,0 +1,31 @@
+body {
+  background-color: #1a1a1a;
+  color: #fff;
+  font-family: 'Courier New', monospace;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+#game {
+  padding: 20px;
+}
+
+#choices button {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+#choices button:hover {
+  background-color: #666;
+}
+
+canvas {
+  background-color: #000;
+  border: 2px solid white;
+}
