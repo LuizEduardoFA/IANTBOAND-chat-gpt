@@ -15,6 +15,90 @@ body {
   max-width: 600px;
   padding: 20px;
 }
+.pushable {
+  position: relative;
+  background: transparent;
+  padding: 0px;
+  border: none;
+  cursor: pointer;
+  outline-offset: 4px;
+  outline-color: deeppink;
+  transition: filter 250ms;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: hsl(226, 25%, 69%);
+  border-radius: 8px;
+  filter: blur(2px);
+  will-change: transform;
+  transform: translateY(2px);
+  transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+
+.edge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  border-radius: 8px;
+  background: linear-gradient(
+    to right,
+    hsl(0, 0%, 76%) 0%,
+    hsl(0, 0%, 68%) 8%,
+    hsl(0, 0%, 22%) 92%,
+    hsl(0, 0%, 0%) 100%
+  );
+}
+
+.front {
+  display: block;
+  position: relative;
+  border-radius: 8px;
+  background: hsl(0, 0%, 51%);
+  padding: 16px 32px;
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 1rem;
+  transform: translateY(-4px);
+  transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+
+.pushable:hover {
+  filter: brightness(110%);
+}
+
+.pushable:hover .front {
+  transform: translateY(-6px);
+  transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
+}
+
+.pushable:active .front {
+  transform: translateY(-2px);
+  transition: transform 34ms;
+}
+
+.pushable:hover .shadow {
+  transform: translateY(4px);
+  transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
+}
+
+.pushable:active .shadow {
+  transform: translateY(1px);
+  transition: transform 34ms;
+}
+
+.pushable:focus:not(:focus-visible) {
+  outline: none;
+}
 
 img {
   max-width: 600px;
@@ -28,7 +112,8 @@ img {
 }
 
 .text {
-  font-size: 2.4rem;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 2.8rem;
   line-height: 1.5;
   opacity: 0;
   transition: opacity 1s ease-in-out;
@@ -38,10 +123,11 @@ img {
 }
 
 #question-text {
-  font-size: 1.4rem;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 2.8rem;
   margin-bottom: 20px;
 }
-
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 #options button {
   background-color: #333;
   color: white;
@@ -60,11 +146,101 @@ img {
 #next-btn {
   margin-top: 20px;
   padding: 10px 18px;
-  font-size: 1rem;
+  font-size: 2.8rem;
   border: none;
-  background-color: #0077cc;
+  background-color: #000000;
   color: white;
   border-radius: 5px;
   cursor: pointer;
   display: none;
 }
+body {
+    font-family: 'Press Start 2P', cursive; /* Fonte pixelada, se disponível */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: black; /* Fundo preto */
+    margin: 0;
+    color: white; /* Texto branco */
+    text-shadow: 2px 2px black; /* Sombra para melhorar a leitura da fonte pixelada */
+    flex-direction: column;
+}
+
+/* Importar a fonte "Press Start 2P" do Google Fonts para um efeito pixelado */
+
+
+
+.caixa-principal {
+   
+    background-color: rgba(0, 0, 0, 0.8); /* Fundo semi-transparente para o container */
+    border: 2px solid white; /* Borda branca */
+    padding: 30px;
+    border-radius: 0px; /* Sem borda arredondada para um visual mais quadrado */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3); /* Brilho branco sutil */
+    width: 90%;
+    max-width: 700px;
+    text-align: center;
+    box-sizing: border-box; /* Garante que padding e border sejam incluídos no width */
+}
+
+.caixa-perguntas {
+  font-family: 'Press Start 2P', cursive; /* Fonte pixelada, se disponível */
+    font-size: 2.8em; /* Ajustado para a fonte pixelada */
+    margin-bottom: 25px;
+    color: white;
+    text-transform: uppercase; /* Maiúsculas como no Undertale */
+    line-height: 1.5;
+}
+
+.caixa-alternativas {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espaçamento entre os botões */
+}
+
+.caixa-alternativas button {
+
+    display: block;
+    width: 100%;
+    padding: 18px; /* Padding maior para os botões */
+    border: 2px solid white; /* Borda branca */
+    background-color: transparent; /* Fundo transparente */
+    color: white;
+    font-size: 2.8em; /* Ajustado para a fonte pixelada */
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    text-transform: uppercase;
+    font-family: 'Press Start 2P', cursive;
+}
+
+.caixa-alternativas button:hover {
+    background-color: white; /* Fundo branco ao passar o mouse */
+    color: black; /* Texto preto ao passar o mouse */
+}
+
+.caixa-resultado {
+    margin-top: 30px;
+    font-size: 1em; /* Ajustado para a fonte pixelada */
+    color: white;
+    text-transform: uppercase;
+    line-height: 1.6;
+    border-top: 2px dashed white; /* Linha divisória */
+    padding-top: 20px;
+}
+
+.texto-resultado {
+    margin-top: 15px;
+}
+
+/* Opcional: Adicionar um efeito de digitação suave para o texto */
+/* .caixa-perguntas, .texto-resultado {
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typing 2s steps(40, end);
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+} */
