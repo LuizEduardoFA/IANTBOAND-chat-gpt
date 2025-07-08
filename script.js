@@ -1,4 +1,4 @@
-const scenes = [
+ const scenes = [
   {
     image: "img/fundo.jpeg",
     text: `Os anjos vigiavam, os demônios corrompiam, e os humanos decidiam.\n\nMas algo mudou.`
@@ -20,28 +20,20 @@ const scenes = [
     text: `Enquanto isso, as trevas cresciam.\n\nOs demônios dançavam no fogo da corrupção, entre as almas perdidas e corrompidas.\n\nEles não estavam escondidos. Estavam no controle, infiltrados, esperando o momento de dominar tudo.`
   },
   {
-    image: "img/artbreeder-image-2025-07-08T01_12_52.541.jpeg",
+    image: "img/artbreeder-image-2025-07-08T01_12_52.541Z.jpeg",
     text: `E Aziel cresceu.\n\nO menino que ninguém reconhecia como seu, agora caminha entre os mundos.\n\nNem anjo, nem demônio.\n\nApenas Aziel — a última esperança ou o último desespero dos céus e do inferno.`
   }
 ];
 
-// Elementos da página
 const storyText = document.getElementById("story-text");
 const sceneImage = document.getElementById("scene-image");
-const choicesContainer = document.getElementById("choices"); // div para mostrar as escolhas
 
 let sceneIndex = 0;
 
-// Guardar escolhas feitas para definir final
-const playerChoices = {
-  primeiraEscolha: null,
-  segundaEscolha: null,
-  terceiraEscolha: null,
-  quartaEscolha: null
-};
-
 // Função para dividir o texto em frases para exibir lentamente
 function splitIntoSentences(text) {
+  // Divide por pontos finais, exclamações, interrogações e quebras duplas de linha
+  // Mantendo o sinal de pontuação no final
   return text.match(/[^.!?\n]+[.!?\n]+|\n\n|[^.!?\n]+$/g).map(s => s.trim()).filter(s => s.length > 0);
 }
 
@@ -57,17 +49,18 @@ function showSentence(sentence) {
         clearInterval(interval);
         resolve();
       }
-    }, 50);
+    }, 50); // velocidade da letra, aumenta para ficar mais lenta
   });
 }
 
-// Exibe todas frases de uma cena
+// Função principal para exibir todas frases de uma cena
 async function showSceneText(text) {
   const sentences = splitIntoSentences(text);
 
   for (let i = 0; i < sentences.length; i++) {
     await showSentence(sentences[i]);
 
+    // Pausa entre frases — mais longa se for quebra de parágrafo (\n\n)
     if (sentences[i] === "") {
       await new Promise(r => setTimeout(r, 1200));
     } else {
@@ -86,130 +79,30 @@ function fadeOut() {
   });
 }
 
-// Função para mostrar escolhas na tela
-function showChoices(choices, onChoiceSelected) {
-  choicesContainer.innerHTML = ""; // limpa escolhas antigas
-  choicesContainer.style.display = "block";
-
-  choices.forEach(choice => {
-    const btn = document.createElement("button");
-    btn.textContent = choice.text;
-    btn.onclick = () => {
-      choicesContainer.style.display = "none";
-      onChoiceSelected(choice.value);
-    };
-    choicesContainer.appendChild(btn);
-  });
-}
-
-// Função para decidir o final baseado nas escolhas
-function getFinal() {
-  const c = playerChoices;
-
-  if (c.quartaEscolha === "A") {
-    return "Final do Senhor Absoluto: Aziel se torna um governante poderoso, mas luta contra sua própria natureza e pode sucumbir ao poder.";
-  } else if (c.quartaEscolha === "B") {
-    return "Final do Libertador: O mundo fica livre de entidades sobrenaturais, mas a humanidade se vê sem proteção, entrando em caos.";
-  } else if (c.quartaEscolha === "C") {
-    return "Final do Mediador: A paz é conquistada com grandes custos, unindo lados antes inimigos, mas com uma esperança verdadeira.";
-  } else if (c.quartaEscolha === "D") {
-    return "Final do Exilado: Aziel some, e a guerra continua, mas com uma lenda viva que inspira futuros heróis.";
-  } else {
-    return "Fim não definido.";
-  }
-}
-
 async function nextScene() {
-  if (sceneIndex < scenes.length) {
-    sceneImage.src = scenes[sceneIndex].image;
-    sceneImage.style.opacity = 1;
-    storyText.style.opacity = 1;
-
-    await showSceneText(scenes[sceneIndex].text);
-
-    sceneIndex++;
-
-    // A partir daqui, insira as escolhas em pontos específicos
-    if (sceneIndex === 6) { // depois da cena 6 (última narrativa), começa a primeira escolha
-      // Primeira escolha
-      showChoices([
-        { text: "A) Aproximar-se dos anjos para aprender mais sobre a guerra.", value: "A" },
-        { text: "B) Aproximar-se dos demônios para obter poder sombrio.", value: "B" },
-        { text: "C) Permanecer solitário e confiar apenas nos próprios instintos.", value: "C" }
-      ], async (choice) => {
-        playerChoices.primeiraEscolha = choice;
-        await fadeOut();
-        await showChoice2();
-      });
-    } else {
-      await fadeOut();
-      nextScene();
-    }
-  } else {
-    // Se acabou as cenas, exibir final com base nas escolhas
-    storyText.style.opacity = 1;
+  if (sceneIndex >= scenes.length) {
+    storyText.textContent = "Fim.";
     sceneImage.style.opacity = 0;
-    storyText.textContent = getFinal();
+    return;
   }
-}
 
-// Segunda escolha
-async function showChoice2() {
-  sceneImage.src = "img/fundo.jpeg"; // Imagem neutra para escolha
+  sceneImage.src = scenes[sceneIndex].image;
   sceneImage.style.opacity = 1;
   storyText.style.opacity = 1;
 
-  storyText.textContent = "Durante suas jornadas, Aziel encontra vestígios de sua origem: a cesta no rio, a maldição e a profecia.\n\nO que fazer?";
-  showChoices([
-    { text: "A) Buscar respostas nos céus e enfrentar os arcanjos.", value: "A" },
-    { text: "B) Buscar respostas no Inferno e enfrentar os senhores demoníacos.", value: "B" },
-    { text: "C) Rejeitar a busca e focar em proteger os humanos.", value: "C" }
-  ], async (choice) => {
-    playerChoices.segundaEscolha = choice;
+  await showSceneText(scenes[sceneIndex].text);
+
+  // Pausa maior no fim da última cena
+  if (sceneIndex === scenes.length - 1) {
+    await new Promise(r => setTimeout(r, 8000));
+  } else {
+    await new Promise(r => setTimeout(r, 2000));
     await fadeOut();
-    await showChoice3();
-  });
-}
+  }
 
-// Terceira escolha
-async function showChoice3() {
-  sceneImage.src = "img/fundo.jpeg";
-  sceneImage.style.opacity = 1;
-  storyText.style.opacity = 1;
-
-  storyText.textContent = "Aziel encontra um antigo pregador transformado em demônio, manipulando humanos.\n\nO que fazer?";
-  showChoices([
-    { text: "A) Tentar purificar o pregador e salvar sua alma.", value: "A" },
-    { text: "B) Destruir o pregador para acabar com sua influência.", value: "B" },
-    { text: "C) Ignorar o pregador e focar em derrubar as forças maiores da guerra.", value: "C" }
-  ], async (choice) => {
-    playerChoices.terceiraEscolha = choice;
-    await fadeOut();
-    await showChoice4();
-  });
-}
-
-// Quarta escolha
-async function showChoice4() {
-  sceneImage.src = "img/fundo.jpeg";
-  sceneImage.style.opacity = 1;
-  storyText.style.opacity = 1;
-
-  storyText.textContent = "Aziel tem a chance de encerrar o conflito de várias formas.\n\nQual é a sua decisão final?";
-  showChoices([
-    { text: "A) Aceitar o trono vazio e governar como um novo senhor.", value: "A" },
-    { text: "B) Destruir tanto o céu quanto o inferno.", value: "B" },
-    { text: "C) Reconciliar anjos, demônios e humanos criando uma nova aliança.", value: "C" },
-    { text: "D) Abandonar tudo e desaparecer.", value: "D" }
-  ], async (choice) => {
-    playerChoices.quartaEscolha = choice;
-    await fadeOut();
-
-    // Exibe o final baseado na escolha
-    storyText.style.opacity = 1;
-    sceneImage.style.opacity = 0;
-    storyText.textContent = getFinal();
-  });
+  sceneIndex++;
+  nextScene();
 }
 
 nextScene();
+
