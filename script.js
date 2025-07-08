@@ -49,7 +49,7 @@ function showSentence(sentence) {
         clearInterval(interval);
         resolve();
       }
-    }, 50); // velocidade da letra, aumenta para ficar mais lenta
+    }, 1); // velocidade da letra, aumenta para ficar mais lenta
   });
 }
 
@@ -78,11 +78,16 @@ function fadeOut() {
     }, 800);
   });
 }
+function iniciarQuiz() {
+  // Esconde a caixa da história e mostra o quiz
+  document.querySelector(".caixa-historia").style.display = "none";
+  caixaPerguntas.style.display = "block";
 
+  mostraPergunta();
+}
 async function nextScene() {
   if (sceneIndex >= scenes.length) {
-    storyText.textContent = "Fim.";
-    sceneImage.style.opacity = 0;
+    iniciarQuiz(); // chama o quiz
     return;
   }
 
@@ -92,7 +97,6 @@ async function nextScene() {
 
   await showSceneText(scenes[sceneIndex].text);
 
-  // Pausa maior no fim da última cena
   if (sceneIndex === scenes.length - 1) {
     await new Promise(r => setTimeout(r, 8000));
   } else {
@@ -106,3 +110,128 @@ async function nextScene() {
 
 nextScene();
 
+const caixaPrincipal = document.querySelector(".caixa-principal");
+const caixaPerguntas = document.querySelector(".caixa-perguntas");
+const caixaAlternativas = document.querySelector(".caixa-alternativas");
+const caixaResultado = document.querySelector(".caixa-resultado");
+const textoResultado = document.querySelector(".texto-resultado");
+
+const perguntas = [
+    {
+        enunciado: "Uma sombra se aproxima na floresta. Ela pergunta: 'Você acredita que demônios podem ter um coração puro?'",
+        alternativas: [
+            {
+                texto: "Sim. Todos merecem uma chance.",
+                afirmacao: "Você mostrou compaixão por aqueles que foram condenados injustamente."
+            },
+            {
+                texto: "Não. O mal nasce com eles.",
+                afirmacao: "Você foi tomado por um julgamento rígido."
+            }
+        ]
+    },
+    {
+        enunciado: "Ao atravessar a ponte de ossos, uma voz ecoa: 'Se tivesse que escolher entre salvar um anjo ou um demônio caído, quem salvaria?'",
+        alternativas: [
+            {
+                texto: "O anjo. Ele é símbolo de esperança.",
+                afirmacao: "Você seguiu a luz, mesmo em tempos de dúvida."
+            },
+            {
+                texto: "O demônio. Ele pode encontrar redenção.",
+                afirmacao: "Você acredita que até os perdidos podem se reencontrar."
+            }
+        ]
+    },
+    {
+        enunciado: "No campo das cinzas, você encontra um pergaminho antigo: 'Mentiras ou verdades? O que você preferiria ouvir no fim do mundo?'",
+        alternativas: [
+            {
+                texto: "Mentiras que confortam.",
+                afirmacao: "Você teme a dor da verdade, mas busca paz."
+            },
+            {
+                texto: "A verdade, mesmo que doa.",
+                afirmacao: "Você encara a realidade com coragem."
+            }
+        ]
+    },
+    {
+        enunciado: "Uma criança celestial chora à beira de um rio de sangue. Ela olha para você e pergunta: 'Você me deixaria para trás para cumprir sua missão?'",
+        alternativas: [
+            {
+                texto: "Sim. O mundo depende disso.",
+                afirmacao: "Você escolheu o dever acima do sentimento."
+            },
+            {
+                texto: "Não. Toda vida importa.",
+                afirmacao: "Você prefere perder o mundo do que perder uma alma."
+            }
+        ]
+    },
+    {
+        enunciado: "Nas escadas do palácio celeste, um velho anjo te encara: 'Você lutaria contra o céu para proteger os condenados da Terra?'",
+        alternativas: [
+            {
+                texto: "Sim. O céu não tem o direito de julgar todos.",
+                afirmacao: "Você se tornou a espada dos esquecidos."
+            },
+            {
+                texto: "Não. Ordem precisa ser mantida.",
+                afirmacao: "Você acredita que justiça vem da obediência à autoridade maior."
+            }
+        ]
+    },
+    {
+        enunciado: "Diante do trono dourado, a auréola em sua cabeça começa a brilhar intensamente. Uma voz pergunta: 'Você é anjo ou demônio?'",
+        alternativas: [
+            {
+                texto: "Sou ambos. E também nenhum.",
+                afirmacao: "Você transcendeu o julgamento dos céus e dos infernos."
+            },
+            {
+                texto: "Sou aquilo que escolho ser.",
+                afirmacao: "Você se libertou dos rótulos e trilhou seu próprio caminho."
+            }
+        ]
+    }
+];
+
+let atual = 0;
+let perguntaAtual;
+let historiaFinal = "";
+
+function mostraPergunta() {
+    if (atual >= perguntas.length) {
+        mostraResultado();
+        return;
+    }
+    perguntaAtual = perguntas[atual];
+    caixaPerguntas.textContent = perguntaAtual.enunciado;
+    caixaAlternativas.textContent = "";
+    mostraAlternativas();
+}
+
+function mostraAlternativas() {
+    for (const alternativa of perguntaAtual.alternativas) {
+        const botaoAlternativas = document.createElement("button");
+        botaoAlternativas.textContent = alternativa.texto;
+        botaoAlternativas.addEventListener("click", () => respostaSelecionada(alternativa));
+        caixaAlternativas.appendChild(botaoAlternativas);
+    }
+}
+
+function respostaSelecionada(opcaoSelecionada) {
+    const afirmacoes = opcaoSelecionada.afirmacao;
+    historiaFinal += afirmacoes + " ";
+    atual++;
+    mostraPergunta();
+}
+
+function mostraResultado() {
+    caixaPerguntas.textContent = "O julgamento chegou ao fim...";
+    textoResultado.textContent = historiaFinal;
+    caixaAlternativas.textContent = "";
+}
+
+mostraPergunta();
