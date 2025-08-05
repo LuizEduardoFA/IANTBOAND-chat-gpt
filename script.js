@@ -49,7 +49,7 @@ function showSentence(sentence) {
         clearInterval(interval);
         resolve();
       }
-    }, 1); // velocidade da letra, aumenta para ficar mais lenta
+    }, 10); // velocidade da letra, aumenta para ficar mais lenta
   });
 }
 
